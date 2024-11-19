@@ -29,7 +29,7 @@ let ballSpeedY = 4;
 let leftPressed = false;
 let rightPressed = false;
 
-// Event listeners for paddle movement
+// Event listeners for paddle movement (Keyboard)
 document.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowLeft') leftPressed = true;
   if (e.key === 'ArrowRight') rightPressed = true;
@@ -39,6 +39,35 @@ document.addEventListener('keyup', (e) => {
   if (e.key === 'ArrowLeft') leftPressed = false;
   if (e.key === 'ArrowRight') rightPressed = false;
 });
+
+// Touch controls for mobile devices
+let touchStartX = 0;
+
+canvas.addEventListener('touchstart', (e) => {
+  const touch = e.touches[0];
+  touchStartX = touch.clientX;
+}, false);
+
+canvas.addEventListener('touchmove', (e) => {
+  const touch = e.touches[0];
+  const touchEndX = touch.clientX;
+
+  if (touchEndX < touchStartX) {
+    leftPressed = true;
+    rightPressed = false;
+  } else if (touchEndX > touchStartX) {
+    rightPressed = true;
+    leftPressed = false;
+  }
+
+  // Prevent default action to avoid scrolling
+  e.preventDefault();
+}, false);
+
+canvas.addEventListener('touchend', () => {
+  leftPressed = false;
+  rightPressed = false;
+}, false);
 
 // Draw the paddle
 function drawPaddle() {
